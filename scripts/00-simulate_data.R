@@ -12,7 +12,7 @@ library(tidyverse)
 #### Simulate ####
 set.seed(853)
 
-simulated_occupancy_data <-
+simulated_calling_data <-
   tibble(
     date = rep(x = as.Date("2023-01-01") + c(0:364), times = 3),
     # Based on : 
@@ -22,11 +22,11 @@ simulated_occupancy_data <-
       rep(x = "Single call", times = 365),
       rep(x = "Repeat caller", times = 365)
     ),
-    number_occupied =
+    number_calling =
       rpois(
         n = 365 * 3,
         lambda = 30
       ) # Draw 1,095 times from the Poisson distribution
   )
 
-head(simulated_occupancy_data)
+head(simulated_calling_data)
