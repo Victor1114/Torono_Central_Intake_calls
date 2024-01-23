@@ -1,0 +1,78 @@
+---
+title: "Toronto central intake calls"
+author: 
+  - Yuchen Chen
+thanks: "Code and data are available at: <https://github.com/Victor1114/Torono_Central_Intake_calls.git>"
+date: today
+date-format: long
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+install.packages("here")
+
+library(tidyverse)
+
+#### Import the data ####
+toronto_shelters_clean <-
+  read_csv(
+    here::here("outputs/data/.csv"),
+    show_col_types = FALSE
+  )
+```
+
+
+# Introduction
+
+You can and should cross-reference sections and sub-sections. 
+
+The remainder of this paper is structured as follows. @sec-data....
+
+
+
+# Data {#sec-data}
+
+We then create a summary statistic on the basis of monthly group, using 'summarise()' from 'dplyr'. We use 'kable()' from 'knitr' to create @tbl-toronto.
+
+```{r}
+#| label: tbl-toronto
+#| tbl-cap: Central intake calls in Toronto in 2023
+#| echo: false
+
+toronto_shelters_clean |>
+  mutate(occupancy_month = month(
+    occupancy_date,
+    label = TRUE,
+    abbr = FALSE
+  )) |>
+  arrange(month(occupancy_date)) |> 
+  drop_na(occupied_beds) |>
+  summarise(number_occupied = mean(occupied_beds),
+            .by = occupancy_month) |>
+  kable(
+    col.names = c("Month", "Average daily number of occupied beds"),
+    digits = 1
+  )
+```
+
+
+
+\appendix
+
+# Appendix {-}
+
+
+# Additional data details
+
+
+
+# References
+
+

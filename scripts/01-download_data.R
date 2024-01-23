@@ -33,7 +33,12 @@ head(toronto_intake_calls_2023)
 
 toronto_intake_calls_2023_clean <-
   clean_names(toronto_intake_calls_2023) |>
-  mutate(calls_date = ymd("date")) |> 
-  select(calls_date, "Unmatched Callers")
+  mutate(calls_date = ymd(date)) |> 
+  select(calls_date, unmatched_callers)
 
-head(toronto_shelters_clean)
+head(toronto_intake_calls_2023_clean)
+
+write_csv(
+  x = toronto_intake_calls_2023_clean,
+  file="outputs/data/edited_data.csv"
+)
