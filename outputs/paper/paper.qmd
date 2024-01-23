@@ -5,7 +5,7 @@ author:
 thanks: "Code and data are available at: <https://github.com/Victor1114/Torono_Central_Intake_calls.git>"
 date: today
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+abstract: "The 2023 analysis of Toronto's central intake calls illustrate a pronounced seasonal pattern in call volumes, with a notable peak in the summer months and a sharp decline in February. This finding highlights demand for city services in different seasons and can inform resource allocation for the year ahead."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -17,13 +17,17 @@ bibliography: references.bib
 #| message: false
 
 install.packages("here")
+install.packages("knitr")
 
+library(knitr)
 library(tidyverse)
+library(here)
+
 
 #### Import the data ####
-toronto_shelters_clean <-
+toronto_intake_calls_2023_clean <-
   read_csv(
-    here::here("outputs/data/.csv"),
+    here::here("outputs/data/edited_data.csv"),
     show_col_types = FALSE
   )
 ```
@@ -31,35 +35,57 @@ toronto_shelters_clean <-
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. 
+The central intake calls recording crucial data for city planning and recourse allocation. In 2023 Toronto, more and more people know central intake calls which means this program helps more people. This paper will deeply research monthly statistical trends of these calls, and revealing significant seasonality that corresponds with social behaviors.
 
-The remainder of this paper is structured as follows. @sec-data....
+By using advanced data(@opendatatoronto) summarization techniques to find out the trend of daily and monthly volumes of calling.(@fig-toronto) The pattern observed will reflect the immediate needs of Toronto's populace clearly.
 
+The ensuing sections of this paper will analyst the data,discuss the implications of the findings in a broader urban context,and propose recommendations for future research and city planning.This study aims to serve as a foundation piece for policymakers and city administrators by offering a transparent view into the data and analytic processes.
 
 
 # Data {#sec-data}
 
-We then create a summary statistic on the basis of monthly group, using 'summarise()' from 'dplyr'. We use 'kable()' from 'knitr' to create @tbl-toronto.
+We then create a summary statistic on the basis of monthly group, using 'summarise()' from 'dplyr'. We use 'kable()' from @knitr to create @tbl-toronto.
 
 ```{r}
 #| label: tbl-toronto
 #| tbl-cap: Central intake calls in Toronto in 2023
 #| echo: false
 
-toronto_shelters_clean |>
-  mutate(occupancy_month = month(
-    occupancy_date,
+toronto_intake_calls_2023_clean |>
+  mutate(calls_month = month(
+    calls_date,
     label = TRUE,
     abbr = FALSE
   )) |>
-  arrange(month(occupancy_date)) |> 
-  drop_na(occupied_beds) |>
-  summarise(number_occupied = mean(occupied_beds),
-            .by = occupancy_month) |>
+  arrange(month(calls_date)) |> 
+  drop_na(unmatched_callers) |>
+  summarise(number_calls = mean(unmatched_callers),
+            .by = calls_month) |>
   kable(
-    col.names = c("Month", "Average daily number of occupied beds"),
+    col.names = c("Month", "Average daily calls of unmatched callers"),
     digits = 1
   )
+```
+
+
+Refer to (@fig-toronto)
+
+```{r}
+#| label: fig-toronto
+#| fig-cap: Central intake calls in Toronto in 2023
+#| echo: false
+
+toronto_intake_calls_2023_clean |>
+  mutate(calls_month = month(
+    calls_date,
+    label = TRUE,
+    abbr = FALSE
+  )) |>
+  arrange(month(calls_date)) |> 
+  drop_na(unmatched_callers) |>
+  summarise(number_calls = mean(unmatched_callers),
+            .by = calls_month) |>
+  ggplot(aes(x=calls_month, y=number_calls))+geom_point()
 ```
 
 
